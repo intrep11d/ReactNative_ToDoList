@@ -24,6 +24,11 @@ export default function Index() {
     ));
   };
 
+  const handleToggleAllTasks = () => {
+    const allCompleted = tasks.every(t => t.completed);
+    setTasks(tasks.map(t => ({ ...t, completed: !allCompleted })));
+  };
+
   const uncheckedTasks = tasks.filter(t => !t.completed);
   const checkedTasks = tasks.filter(t => t.completed);
 
@@ -43,6 +48,10 @@ export default function Index() {
             <Text style={styles.addButtonText}>Add</Text>
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity style={styles.toggleAll} onPress={handleToggleAllTasks}>
+          <Text>Toggle All Tasks</Text>
+        </TouchableOpacity>
 
         <ScrollView style={styles.tasksList}>
           <Text style={styles.listTitle}>Current Tasks</Text>
@@ -146,4 +155,12 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
     color: '#aaa',
   },
+  toggleAll: {
+    backgroundColor: '#9db4c2',
+    borderRadius: 15,
+    padding: 10,
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center', 
+  }
 });
