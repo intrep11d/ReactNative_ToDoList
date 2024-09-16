@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 
+interface Task { 
+  id: number;
+  text: string;
+  completed: boolean;
+}
+
 export default function Index() {
-  const [tasks, setTasks] = useState([]);
-  const [task, setTask] = useState('');
+  const [tasks, setTasks] = useState<Task[]>([]); // Provide the type for tasks
+  const [task, setTask] = useState<string>(''); // Provide the type for task
 
   const handleAddTask = () => {
     if (task) {
@@ -12,7 +18,7 @@ export default function Index() {
     }
   };
 
-  const handleToggleTask = (id) => {
+  const handleToggleTask = (id: number) => { // Provide the type for id
     setTasks(tasks.map(t =>
       t.id === id ? { ...t, completed: !t.completed } : t
     ));
