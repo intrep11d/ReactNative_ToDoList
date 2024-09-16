@@ -1,26 +1,59 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView, Image } from 'react-native';
 
-interface Task { 
+interface Subtask{
   id: number;
   text: string;
   completed: boolean;
 }
 
+interface Task { 
+  id: number;
+  text: string;
+  completed: boolean;
+  subtasks: Subtask[];
+}
+
 export default function Index() {
-  const [tasks, setTasks] = useState<Task[]>([]); // Provide the type for tasks
-  const [task, setTask] = useState<string>(''); // Provide the type for task
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [task, setTask] = useState<string>('');
+  const [subtaskText, setSubtaskText] = useState<string>('');
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
 
   const handleAddTask = () => {
     if (task) {
-      setTasks([...tasks, { id: Date.now(), text: task, completed: false }]);
+      setTasks([...tasks, { id: Date.now(), text: task, completed: false, subtasks: []}]);
       setTask('');
     }
   };
 
-  const handleToggleTask = (id: number) => { // Provide the type for id
+  const handleAddSubtask = (taskId: number) => {
+    if (subtaskText) {
+      setTasks(tasks.map(t =>
+        t.id === taskId
+          ? { ...t, subtasks: [...t.subtasks, { id: Date.now(), text: subtaskText, completed: false }] }
+          : t
+      ));
+      setSubtaskText('');
+    }
+  };
+
+  const handleToggleTask = (id: number) => { 
     setTasks(tasks.map(t =>
       t.id === id ? { ...t, completed: !t.completed } : t
+    ));
+  };
+
+  const handleToggleSubtask = (taskId: number, subtaskId: number) => {
+    setTasks(tasks.map(t =>
+      t.id === taskId
+        ? {
+            ...t,
+            subtasks: t.subtasks.map(st =>
+              st.id === subtaskId ? { ...st, completed: !st.completed } : st
+            )
+          }
+        : t
     ));
   };
 
@@ -54,20 +87,52 @@ export default function Index() {
           </TouchableOpacity>
         </View>
 
-        
 
         <ScrollView style={styles.tasksList}>
           <Text style={styles.listTitle}>Current Tasks</Text>
           <TouchableOpacity style={styles.toggleAll} onPress={handleToggleAllTasks}>
           <Text style={styles.addButtonText}>Toggle All Tasks</Text>
         </TouchableOpacity>
-          {uncheckedTasks.map(t => (
-            <TouchableOpacity key={t.id} style={styles.task} onPress={() => handleToggleTask(t.id)}>
-              <View style={[styles.checkbox, t.completed && styles.checkboxChecked]}>
-                {t.completed && <Text style={styles.checkboxText}>✔</Text>}
-              </View>
-              <Text style={[styles.taskText, t.completed && styles.taskTextCompleted]}>{t.text}</Text>
-            </TouchableOpacity>
+        {uncheckedTasks.map(t => (
+            <View key={t.id}>
+              <TouchableOpacity style={styles.task} onPress={() => handleToggleTask(t.id)}>
+                <View style={[styles.checkbox, t.completed && styles.checkboxChecked]}>
+                  {t.completed && <Text style={styles.checkboxText}>✔</Text>}
+                </View>
+                <Text style={[styles.taskText, t.completed && styles.taskTextCompleted]}>{t.text}</Text>
+              </TouchableOpacity>
+              
+              {t.subtasks.length > 0 && (
+                <View style={styles.subtaskWrapper}>
+                  {t.subtasks.map(st => (
+                    <TouchableOpacity key={st.id} style={styles.subtask} onPress={() => handleToggleSubtask(t.id, st.id)}>
+                      <View style={[styles.checkbox, st.completed && styles.checkboxChecked]}>
+                        {st.completed && <Text style={styles.checkboxText}>✔</Text>}
+                      </View>
+                      <Text style={[styles.taskText, st.completed && styles.taskTextCompleted]}>{st.text}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            
+              {selectedTaskId === t.id && (
+                <View style={styles.inputSubtaskContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Add a subtask"
+                    value={subtaskText}
+                    onChangeText={setSubtaskText}
+                  />
+                  <TouchableOpacity style={styles.addSubtaskButton} onPress={() => handleAddSubtask(t.id)}>
+                    <Text style={styles.addButtonText}>Add Subtask</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              <TouchableOpacity onPress={() => setSelectedTaskId(t.id === selectedTaskId ? null : t.id)}>
+                <Text style={styles.subtaskToggleText}>{selectedTaskId === t.id ? 'Hide Subtasks' : 'Add a subtask'}</Text>
+              </TouchableOpacity>
+            </View>
           ))}
 
           <Text style={styles.listTitle}>Completed Tasks</Text>
@@ -189,5 +254,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
-  }
+  },
+  subtaskWrapper: {
+    paddingLeft: 50,
+  },
+  subtask:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5,
+  },
+  subtaskToggleText:{
+    fontSize: 12,
+    color: '#000',
+    marginLeft:10,
+    paddingLeft: 50,
+    fontWeight:'bold',  
+  },
+  inputSubtaskContainer: {
+    paddingLeft:50,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  addSubtaskButton: {
+    backgroundColor: '#dd868c',
+    color: '#000',
+    borderRadius: 15,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#000',
+    borderWidth:  2.5, 
+  },
 });
