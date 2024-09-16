@@ -49,12 +49,13 @@ export default function Index() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.toggleAll} onPress={handleToggleAllTasks}>
-          <Text>Toggle All Tasks</Text>
-        </TouchableOpacity>
+        
 
         <ScrollView style={styles.tasksList}>
           <Text style={styles.listTitle}>Current Tasks</Text>
+          <TouchableOpacity style={styles.toggleAll} onPress={handleToggleAllTasks}>
+          <Text>Toggle All Tasks</Text>
+        </TouchableOpacity>
           {uncheckedTasks.map(t => (
             <TouchableOpacity key={t.id} style={styles.task} onPress={() => handleToggleTask(t.id)}>
               <View style={[styles.checkbox, t.completed && styles.checkboxChecked]}>
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginVertical: 10,
+    marginBottom: 1,
   },
   task: {
     flexDirection: 'row',
