@@ -32,6 +32,8 @@ export default function Index() {
   const uncheckedTasks = tasks.filter(t => !t.completed);
   const checkedTasks = tasks.filter(t => t.completed);
 
+  const allTasksCompleted = tasks.length > 0 && tasks.every(t => t.completed);
+
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -59,7 +61,9 @@ export default function Index() {
         <ScrollView style={styles.tasksList}>
           <Text style={styles.listTitle}>Current Tasks</Text>
           <TouchableOpacity style={styles.toggleAll} onPress={handleToggleAllTasks}>
-          <Text style={styles.addButtonText}>Toggle All Tasks</Text>
+            <Text style={styles.addButtonText}>
+                {allTasksCompleted ? 'Mark All Incomplete' : 'Mark All Completed'}
+              </Text>
         </TouchableOpacity>
           {uncheckedTasks.map(t => (
             <TouchableOpacity key={t.id} style={styles.task} onPress={() => handleToggleTask(t.id)}>
