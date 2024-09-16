@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView, Image } from 'react-native';
 
 interface Task { 
   id: number;
@@ -35,8 +35,13 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Today's Tasks</Text>
-
+          <View style={styles.titleRow}>
+          <Image
+            source={require('./kuromiwan.png')}
+            style={styles.image} 
+          />  
+          <Text style={styles.sectionTitle}>TO-DO LIST</Text>
+        </View>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -54,7 +59,7 @@ export default function Index() {
         <ScrollView style={styles.tasksList}>
           <Text style={styles.listTitle}>Current Tasks</Text>
           <TouchableOpacity style={styles.toggleAll} onPress={handleToggleAllTasks}>
-          <Text>Toggle All Tasks</Text>
+          <Text style={styles.addButtonText}>Toggle All Tasks</Text>
         </TouchableOpacity>
           {uncheckedTasks.map(t => (
             <TouchableOpacity key={t.id} style={styles.task} onPress={() => handleToggleTask(t.id)}>
@@ -83,7 +88,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8EAED',
+    backgroundColor: '#f0e2e2',
   },
   tasksWrapper: {
     paddingTop: 80,
@@ -92,7 +97,9 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#000',
     marginBottom: 20,
+    textAlign: 'center',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -100,22 +107,27 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    borderColor: '#ddd',
-    borderWidth: 1,
+    borderColor: '#FFC0CB',
+    borderWidth: 2.5,
     borderRadius: 15,
     padding: 10,
     marginRight: 10,
     backgroundColor: '#fff',
+    color: '#000',
   },
   addButton: {
-    backgroundColor: '#9db4c2',
+    backgroundColor: '#FFC0CB',
+    color: '#000',
     borderRadius: 15,
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: '#000',
+    borderWidth:  2.5, 
   },
+
   addButtonText: {
-    color: '#434c52',
+    color: '#000',
     fontWeight: 'bold',
   },
   tasksList: {
@@ -125,6 +137,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginVertical: 10,
+    color: '#000',
     marginBottom: 1,
   },
   task: {
@@ -132,23 +145,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#FFC0CB', 
   },
   checkbox: {
     width: 24,
     height: 24,
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    borderWidth: 2.5,
+    borderColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
   },
   checkboxChecked: {
-    backgroundColor: '#9db4c2',
+    backgroundColor: '#FFC0CB',
   },
   checkboxText: {
-    color: '#fff',
+    color: '#000',
   },
   taskText: {
     fontSize: 16,
@@ -158,11 +171,23 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   toggleAll: {
-    backgroundColor: '#9db4c2',
+    backgroundColor: '#FFC0CB',
     borderRadius: 15,
     padding: 10,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center', 
+    borderColor: '#000',
+    borderWidth:  2.5, 
+  },
+  image:{
+    width: 150,
+    height: 150,
+  },
+  titleRow:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
   }
 });
